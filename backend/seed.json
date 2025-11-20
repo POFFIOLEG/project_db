@@ -1,0 +1,79 @@
+[
+    {"model": "references.country", "pk": 1, "fields": {"code": "RUS", "name": "Россия", "created_at": "2025-11-18T09:00:00Z", "updated_at": "2025-11-18T09:00:00Z"}},
+    {"model": "references.country", "pk": 2, "fields": {"code": "DEU", "name": "Германия", "created_at": "2025-11-18T09:00:00Z", "updated_at": "2025-11-18T09:00:00Z"}},
+    {"model": "references.country", "pk": 3, "fields": {"code": "BLR", "name": "Беларусь", "created_at": "2025-11-18T09:00:00Z", "updated_at": "2025-11-18T09:00:00Z"}},
+
+    {"model": "auth.user", "pk": 1, "fields": {"password": "pbkdf2_sha256$1000000$CnZxydtpGkTXeHxIHZRFoL$8Wm5/5RiQh8p9AIG1EGaK6wtry9io/Y87aDmFJntJWc=", "last_login": null, "is_superuser": false, "username": "warehouse.lead", "first_name": "Ирина", "last_name": "Товарова", "email": "i.tovarova@mx.local", "is_staff": false, "is_active": true, "date_joined": "2025-01-01T09:00:00Z"}},
+    {"model": "auth.user", "pk": 2, "fields": {"password": "pbkdf2_sha256$1000000$CnZxydtpGkTXeHxIHZRFoL$8Wm5/5RiQh8p9AIG1EGaK6wtry9io/Y87aDmFJntJWc=", "last_login": null, "is_superuser": false, "username": "warehouse.clerk", "first_name": "Павел", "last_name": "Складыч", "email": "p.skladych@mx.local", "is_staff": false, "is_active": true, "date_joined": "2025-01-05T09:00:00Z"}},
+    {"model": "auth.user", "pk": 3, "fields": {"password": "pbkdf2_sha256$1000000$CnZxydtpGkTXeHxIHZRFoL$8Wm5/5RiQh8p9AIG1EGaK6wtry9io/Y87aDmFJntJWc=", "last_login": null, "is_superuser": false, "username": "sales.rep", "first_name": "Мария", "last_name": "Продавец", "email": "m.prodavec@mx.local", "is_staff": false, "is_active": true, "date_joined": "2025-01-05T09:00:00Z"}},
+    {"model": "auth.user", "pk": 4, "fields": {"password": "pbkdf2_sha256$1000000$CnZxydtpGkTXeHxIHZRFoL$8Wm5/5RiQh8p9AIG1EGaK6wtry9io/Y87aDmFJntJWc=", "last_login": null, "is_superuser": true, "username": "director", "first_name": "Алексей", "last_name": "Директор", "email": "a.direktor@mx.local", "is_staff": true, "is_active": true, "date_joined": "2024-12-20T09:00:00Z"}},
+  
+    {"model": "references.manufacturer", "pk": 1, "fields": {"name": "ООО \"Молпром\"", "country": 1, "company_code": "460", "created_at": "2025-11-18T09:00:00Z", "updated_at": "2025-11-18T09:00:00Z"}},
+    {"model": "references.manufacturer", "pk": 2, "fields": {"name": "Bayer AG", "country": 2, "company_code": "400", "created_at": "2025-11-18T09:00:00Z", "updated_at": "2025-11-18T09:00:00Z"}},
+  
+    {"model": "references.supplier", "pk": 1, "fields": {"name": "Поставщик ТД Волна", "tax_number": "7701234567", "country": 1, "address": "Москва, ул. Примерная, 10", "email": "info@volna.ru", "phone": "+7-495-000-0000", "created_at": "2025-11-18T09:00:00Z", "updated_at": "2025-11-18T09:00:00Z"}},
+    {"model": "references.supplier", "pk": 2, "fields": {"name": "Logistics GmbH", "tax_number": "DE123456789", "country": 2, "address": "Берлин, Königstrasse 5", "email": "contact@logistics.de", "phone": "+49-30-111-111", "created_at": "2025-11-18T09:00:00Z", "updated_at": "2025-11-18T09:00:00Z"}},
+  
+    {"model": "references.suppliercontact", "pk": 1, "fields": {"supplier": 1, "name": "Иван Петров", "position": "Менеджер", "phone": "+7-999-123-45-67", "email": "petrov@volna.ru", "created_at": "2025-11-18T09:00:00Z", "updated_at": "2025-11-18T09:00:00Z"}},
+    {"model": "references.suppliercontact", "pk": 2, "fields": {"supplier": 2, "name": "Helga Braun", "position": "Key Account", "phone": "+49-30-111-112", "email": "helga@logistics.de", "created_at": "2025-11-18T09:00:00Z", "updated_at": "2025-11-18T09:00:00Z"}},
+  
+    {"model": "references.storagelocation", "pk": 1, "fields": {"code": "MH-WH-01", "name": "Склад МХ", "location_type": "warehouse", "address": "Торговый центр, складская зона", "capacity_units": 10000, "created_at": "2025-11-18T09:00:00Z", "updated_at": "2025-11-18T09:00:00Z"}},
+    {"model": "references.storagelocation", "pk": 2, "fields": {"code": "MH-SF-01", "name": "Торговый зал", "location_type": "shop_floor", "address": "Торговый центр, зал", "capacity_units": 5000, "created_at": "2025-11-18T09:00:00Z", "updated_at": "2025-11-18T09:00:00Z"}},
+    {"model": "references.storagelocation", "pk": 3, "fields": {"code": "DC-001", "name": "Распределительный центр", "location_type": "dc", "address": "Промзона 5", "capacity_units": 50000, "created_at": "2025-11-18T09:00:00Z", "updated_at": "2025-11-18T09:00:00Z"}},
+  
+    {"model": "references.truck", "pk": 1, "fields": {"number": "Т123МХ77", "capacity_kg": 5000, "driver_name": "Сергей Кузнецов", "active": true, "created_at": "2025-11-18T09:00:00Z", "updated_at": "2025-11-18T09:00:00Z"}},
+    {"model": "references.truck", "pk": 2, "fields": {"number": "B-LOG-2045", "capacity_kg": 8000, "driver_name": "Hans Becker", "active": true, "created_at": "2025-11-18T09:00:00Z", "updated_at": "2025-11-18T09:00:00Z"}},
+  
+    {"model": "staff.department", "pk": 1, "fields": {"name": "Склад", "description": "Работа с товаром"}},
+    {"model": "staff.department", "pk": 2, "fields": {"name": "Продажи", "description": "Работа с покупателями"}},
+    {"model": "staff.department", "pk": 3, "fields": {"name": "Администрация", "description": "Управление магазином"}},
+  
+    {"model": "staff.position", "pk": 1, "fields": {"name": "Кладовщик", "monthly_hours": 160, "hourly_rate": "350.00", "responsibilities": "Приемка, размещение, списания"}},
+    {"model": "staff.position", "pk": 2, "fields": {"name": "Продавец", "monthly_hours": 160, "hourly_rate": "320.00", "responsibilities": "Обслуживание покупателей"}},
+    {"model": "staff.position", "pk": 3, "fields": {"name": "Товаровед", "monthly_hours": 160, "hourly_rate": "450.00", "responsibilities": "Контроль поставок и цен"}},
+    {"model": "staff.position", "pk": 4, "fields": {"name": "Директор", "monthly_hours": 160, "hourly_rate": "600.00", "responsibilities": "Общее руководство"}},
+  
+    {"model": "staff.accessrole", "pk": 1, "fields": {"code": "warehouse", "name": "Товарный учет", "description": "Доступ к складам"}},
+    {"model": "staff.accessrole", "pk": 2, "fields": {"code": "pricing", "name": "Ценообразование", "description": "Работа с прайс-листами"}},
+    {"model": "staff.accessrole", "pk": 3, "fields": {"code": "hr", "name": "Кадровый учет", "description": "Учёт рабочего времени"}},
+    {"model": "staff.accessrole", "pk": 4, "fields": {"code": "director", "name": "Директор", "description": "Полный доступ"}},
+  
+    {"model": "staff.employee", "pk": 1, "fields": {"user": 1, "full_name": "Ирина Товарова", "passport_series": "45 12", "passport_number": "345678", "passport_address": "Москва, ул. Примерная, 1-1", "foreign_passport": "70 1234567", "birth_date": "1990-05-12", "department": 1, "position": 3, "work_phone": "+7-495-100-0001", "personal_phone": "+7-999-100-0001", "work_email": "i.tovarova@mx.local", "personal_email": "tovarova.personal@mail.ru", "role": 1, "status": "active", "hired_at": "2025-01-10"}},
+    {"model": "staff.employee", "pk": 2, "fields": {"user": 2, "full_name": "Павел Складыч", "passport_series": "45 34", "passport_number": "987654", "passport_address": "Москва, ул. Складская, 15", "foreign_passport": "70 7654321", "birth_date": "1992-02-03", "department": 1, "position": 1, "work_phone": "+7-495-100-0002", "personal_phone": "+7-999-100-0002", "work_email": "p.skladych@mx.local", "personal_email": "skladych.personal@mail.ru", "role": 1, "status": "active", "hired_at": "2025-01-15"}},
+    {"model": "staff.employee", "pk": 3, "fields": {"user": 3, "full_name": "Мария Продавец", "passport_series": "45 56", "passport_number": "112233", "passport_address": "Москва, ул. Торговая, 5", "foreign_passport": "70 9988776", "birth_date": "1995-09-21", "department": 2, "position": 2, "work_phone": "+7-495-100-0003", "personal_phone": "+7-999-100-0003", "work_email": "m.prodavec@mx.local", "personal_email": "prodavec.personal@mail.ru", "role": 2, "status": "active", "hired_at": "2025-01-12"}},
+    {"model": "staff.employee", "pk": 4, "fields": {"user": 4, "full_name": "Алексей Директор", "passport_series": "45 78", "passport_number": "556677", "passport_address": "Москва, ул. Управленческая, 20", "foreign_passport": "70 2233445", "birth_date": "1986-11-30", "department": 3, "position": 4, "work_phone": "+7-495-100-0004", "personal_phone": "+7-999-100-0004", "work_email": "a.direktor@mx.local", "personal_email": "direktor.personal@mail.ru", "role": 4, "status": "active", "hired_at": "2025-01-01"}},
+  
+    {"model": "inventory.product", "pk": 1, "fields": {"name": "Молоко 3.2% 1л", "sku": "MLK-001", "manufacturer": 1, "manufacturer_code": "4601234567890", "country": 1, "dimensions": "1 л", "unit": "l", "shelf_life_days": 7, "barcode": "4601234567890", "category": "Молочные", "extra_info": "", "created_at": "2025-11-18T09:00:00Z", "updated_at": "2025-11-18T09:00:00Z"}},
+    {"model": "inventory.product", "pk": 2, "fields": {"name": "Детское питание 200г", "sku": "BABY-200", "manufacturer": 2, "manufacturer_code": "4009876543210", "country": 2, "dimensions": "банка 200г", "unit": "pcs", "shelf_life_days": 365, "barcode": "4009876543210", "category": "Детское питание", "extra_info": "", "created_at": "2025-11-18T09:00:00Z", "updated_at": "2025-11-18T09:00:00Z"}},
+  
+    {"model": "inventory.stockarea", "pk": 1, "fields": {"code": "WH-DRY", "name": "Склад сухих", "area_type": "warehouse", "parent_location": 1, "max_capacity": "3000.00", "temperature_min": null, "temperature_max": null, "created_at": "2025-11-18T09:00:00Z", "updated_at": "2025-11-18T09:00:00Z"}},
+    {"model": "inventory.stockarea", "pk": 2, "fields": {"code": "WH-COLD", "name": "Склад холод", "area_type": "cold", "parent_location": 1, "max_capacity": "2000.00", "temperature_min": -4, "temperature_max": 6, "created_at": "2025-11-18T09:00:00Z", "updated_at": "2025-11-18T09:00:00Z"}},
+    {"model": "inventory.stockarea", "pk": 3, "fields": {"code": "SF-MAIN", "name": "Полки зала", "area_type": "sales", "parent_location": 2, "max_capacity": "1000.00", "temperature_min": null, "temperature_max": null, "created_at": "2025-11-18T09:00:00Z", "updated_at": "2025-11-18T09:00:00Z"}},
+  
+    {"model": "inventory.productbatch", "pk": 1, "fields": {"product": 1, "batch_code": "BATCH-MLK-001", "contract_item": null, "production_date": "2025-11-10", "expiration_date": "2025-11-17", "quantity": "500.000", "input_price": "35.00", "delivery_price": "2.50", "status": "received", "created_at": "2025-11-18T09:00:00Z", "updated_at": "2025-11-18T09:00:00Z"}},
+    {"model": "inventory.productbatch", "pk": 2, "fields": {"product": 2, "batch_code": "BATCH-BABY-001", "contract_item": null, "production_date": "2025-09-01", "expiration_date": "2026-09-01", "quantity": "200.000", "input_price": "180.00", "delivery_price": "5.00", "status": "received", "created_at": "2025-11-18T09:00:00Z", "updated_at": "2025-11-18T09:00:00Z"}},
+  
+    {"model": "inventory.stockitem", "pk": 1, "fields": {"product": 1, "batch": 1, "stock_area": 2, "quantity": "300.000", "reserved_quantity": "0.000", "expiration_date": "2025-11-17", "created_at": "2025-11-18T09:00:00Z", "updated_at": "2025-11-18T09:00:00Z"}},
+    {"model": "inventory.stockitem", "pk": 2, "fields": {"product": 1, "batch": 1, "stock_area": 3, "quantity": "150.000", "reserved_quantity": "0.000", "expiration_date": "2025-11-17", "created_at": "2025-11-18T09:00:00Z", "updated_at": "2025-11-18T09:00:00Z"}},
+    {"model": "inventory.stockitem", "pk": 3, "fields": {"product": 2, "batch": 2, "stock_area": 1, "quantity": "200.000", "reserved_quantity": "0.000", "expiration_date": "2026-09-01", "created_at": "2025-11-18T09:00:00Z", "updated_at": "2025-11-18T09:00:00Z"}},
+  
+    {"model": "pricing.pricerestriction", "pk": 1, "fields": {"product": 1, "max_markup_percent": "15.00", "max_daily_change_percent": "5.00", "allow_auto_markdown": true}},
+    {"model": "pricing.pricerestriction", "pk": 2, "fields": {"product": 2, "max_markup_percent": "20.00", "max_daily_change_percent": "5.00", "allow_auto_markdown": false}},
+  
+    {"model": "pricing.pricelist", "pk": 1, "fields": {"trading_point": "МХ-001", "product": 1, "stock_area": 3, "price_type": "regular", "input_price": "37.50", "final_price": "45.99", "regular_price": "45.99", "label_type": "white", "valid_from": "2025-11-18", "valid_to": null, "is_active": true, "reason": ""}},
+    {"model": "pricing.pricelist", "pk": 2, "fields": {"trading_point": "МХ-001", "product": 2, "stock_area": null, "price_type": "regular", "input_price": "185.00", "final_price": "229.99", "regular_price": "229.99", "label_type": "white", "valid_from": "2025-11-18", "valid_to": null, "is_active": true, "reason": ""}},
+  
+    {"model": "inventory.inventorysession", "pk": 1, "fields": {"code": "INV-2025-11", "scheduled_date": "2025-11-25", "status": "open", "created_by": 1, "approved_by": null, "notes": "Перед открытием", "created_at": "2025-11-18T09:00:00Z", "updated_at": "2025-11-18T09:00:00Z"}},
+    {"model": "inventory.inventoryline", "pk": 1, "fields": {"session": 1, "product": 1, "stock_area": 2, "system_qty": "300.000", "actual_qty": "295.000", "comment": "Недостача 5 л, списать", "created_at": "2025-11-18T09:00:00Z", "updated_at": "2025-11-18T09:00:00Z"}},
+  
+    {"model": "pricing.pricecommand", "pk": 1, "fields": {"code": "CMD-2025-11-18", "scheduled_for": "2025-11-18", "status": "executed", "created_by": 4, "executed_at": "2025-11-18T05:00:00Z", "notes": "Утренний приказ"}},
+    {"model": "pricing.pricecommanditem", "pk": 1, "fields": {"command": 1, "price": 1, "coupon": null, "label_type": "white", "comment": ""}},
+  
+    {"model": "pricing.stoplistentry", "pk": 1, "fields": {"product": 2, "trading_point": "МХ-001", "reason": "Превышение лимита по наценке", "blocked_price": "300.00", "created_at": "2025-11-18T09:00:00Z"}},
+  
+    {"model": "attendance.scheduletemplate", "pk": 1, "fields": {"name": "График кладовщика", "position": 1, "weekdays": {"mon": ["08:00", "17:00"], "tue": ["08:00", "17:00"], "wed": ["08:00", "17:00"], "thu": ["08:00", "17:00"], "fri": ["08:00", "17:00"]}}},
+  
+    {"model": "attendance.worksession", "pk": 1, "fields": {"employee": 2, "started_at": "2025-11-17T04:50:00Z", "ended_at": "2025-11-17T14:15:00Z", "source": "system"}},
+  
+    {"model": "attendance.leaverequest", "pk": 1, "fields": {"employee": 3, "leave_type": "vacation", "start_date": "2025-12-01", "end_date": "2025-12-14", "approved_by": null, "approved_at": null, "documents_provided": false, "comment": "Плановый отпуск"}}
+  ]
