@@ -21,6 +21,7 @@ from rest_framework.routers import DefaultRouter
 from attendance.views import (
     AttendanceReportLineViewSet,
     AttendanceReportViewSet,
+    EmployeeScheduleViewSet,
     LeaveRequestViewSet,
     ScheduleTemplateViewSet,
     WorkSessionViewSet,
@@ -30,14 +31,20 @@ from inventory.views import (
     InventorySessionViewSet,
     ProductBatchViewSet,
     ProductViewSet,
+    ReceivingDiscrepancyViewSet,
+    ReceivingItemViewSet,
+    ReceivingOrderViewSet,
     ShelfViewSet,
     StockAreaViewSet,
     StockItemViewSet,
     StockOperationViewSet,
+    StockPlacementViewSet,
     WriteOffActViewSet,
 )
+from integration.views import MasterDataExportView, MasterDataSyncJobViewSet
 from pricing.views import (
     CouponViewSet,
+    PriceCategoryLimitViewSet,
     PriceCommandItemViewSet,
     PriceCommandViewSet,
     PriceListViewSet,
@@ -84,6 +91,10 @@ router.register('stock-operations', StockOperationViewSet)
 router.register('write-off-acts', WriteOffActViewSet)
 router.register('inventory-sessions', InventorySessionViewSet)
 router.register('inventory-lines', InventoryLineViewSet)
+router.register('receiving-orders', ReceivingOrderViewSet)
+router.register('receiving-items', ReceivingItemViewSet)
+router.register('receiving-discrepancies', ReceivingDiscrepancyViewSet)
+router.register('stock-placements', StockPlacementViewSet)
 
 # pricing
 router.register('price-restrictions', PriceRestrictionViewSet)
@@ -91,7 +102,11 @@ router.register('price-lists', PriceListViewSet)
 router.register('coupons', CouponViewSet)
 router.register('price-commands', PriceCommandViewSet)
 router.register('price-command-items', PriceCommandItemViewSet)
+router.register('price-category-limits', PriceCategoryLimitViewSet)
 router.register('stop-list', StopListEntryViewSet)
+
+# integration / HQ data exchange
+router.register('hq-sync-jobs', MasterDataSyncJobViewSet)
 
 # attendance
 router.register('schedule-templates', ScheduleTemplateViewSet)
@@ -99,9 +114,11 @@ router.register('work-sessions', WorkSessionViewSet)
 router.register('attendance-reports', AttendanceReportViewSet)
 router.register('attendance-report-lines', AttendanceReportLineViewSet)
 router.register('leave-requests', LeaveRequestViewSet)
+router.register('employee-schedules', EmployeeScheduleViewSet)
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
+    path('api/hq/export/', MasterDataExportView.as_view(), name='hq-export'),
 ]

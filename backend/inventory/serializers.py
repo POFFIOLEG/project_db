@@ -5,10 +5,14 @@ from .models import (
     InventorySession,
     Product,
     ProductBatch,
+    ReceivingDiscrepancy,
+    ReceivingItem,
+    ReceivingOrder,
     Shelf,
     StockArea,
     StockItem,
     StockOperation,
+    StockPlacement,
     WriteOffAct,
 )
 
@@ -75,5 +79,33 @@ class InventorySessionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = InventorySession
+        fields = '__all__'
+
+
+class ReceivingDiscrepancySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ReceivingDiscrepancy
+        fields = '__all__'
+
+
+class ReceivingItemSerializer(serializers.ModelSerializer):
+    discrepancies = ReceivingDiscrepancySerializer(many=True, read_only=True)
+
+    class Meta:
+        model = ReceivingItem
+        fields = '__all__'
+
+
+class ReceivingOrderSerializer(serializers.ModelSerializer):
+    items = ReceivingItemSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = ReceivingOrder
+        fields = '__all__'
+
+
+class StockPlacementSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StockPlacement
         fields = '__all__'
 

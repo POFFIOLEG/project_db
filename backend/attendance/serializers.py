@@ -3,6 +3,7 @@ from rest_framework import serializers
 from .models import (
     AttendanceReport,
     AttendanceReportLine,
+    EmployeeSchedule,
     LeaveRequest,
     ScheduleTemplate,
     WorkSession,
@@ -21,6 +22,12 @@ class WorkSessionSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class EmployeeScheduleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EmployeeSchedule
+        fields = '__all__'
+
+
 class AttendanceReportLineSerializer(serializers.ModelSerializer):
     class Meta:
         model = AttendanceReportLine
@@ -36,6 +43,8 @@ class AttendanceReportSerializer(serializers.ModelSerializer):
 
 
 class LeaveRequestSerializer(serializers.ModelSerializer):
+    requires_documents = serializers.BooleanField(read_only=True)
+
     class Meta:
         model = LeaveRequest
         fields = '__all__'

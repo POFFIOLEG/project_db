@@ -1,6 +1,13 @@
 from django.contrib import admin
 
-from .models import AttendanceReport, AttendanceReportLine, LeaveRequest, ScheduleTemplate, WorkSession
+from .models import (
+    AttendanceReport,
+    AttendanceReportLine,
+    EmployeeSchedule,
+    LeaveRequest,
+    ScheduleTemplate,
+    WorkSession,
+)
 
 
 @admin.register(ScheduleTemplate)
@@ -10,7 +17,8 @@ class ScheduleTemplateAdmin(admin.ModelAdmin):
 
 @admin.register(WorkSession)
 class WorkSessionAdmin(admin.ModelAdmin):
-    list_display = ('employee', 'started_at', 'ended_at', 'source')
+    list_display = ('employee', 'started_at', 'ended_at', 'source', 'auto_closed')
+    list_filter = ('source', 'auto_closed')
 
 
 class AttendanceReportLineInline(admin.TabularInline):
@@ -20,10 +28,17 @@ class AttendanceReportLineInline(admin.TabularInline):
 
 @admin.register(AttendanceReport)
 class AttendanceReportAdmin(admin.ModelAdmin):
-    list_display = ('week_start', 'week_end', 'approved_at')
+    list_display = ('week_start', 'week_end', 'status', 'approved_at')
+    list_filter = ('status',)
     inlines = [AttendanceReportLineInline]
 
 
 @admin.register(LeaveRequest)
 class LeaveRequestAdmin(admin.ModelAdmin):
-    list_display = ('employee', 'leave_type', 'start_date', 'end_date', 'documents_provided')
+    list_display = ('employee', 'leave_type', 'start_date', 'end_date', 'documents_provided', 'documents_deadline')
+    list_filter = ('leave_type', 'documents_provided')
+
+
+@admin.register(EmployeeSchedule)
+class EmployeeScheduleAdmin(admin.ModelAdmin):
+    list_display = ('employee', 'template', 'effective_from')

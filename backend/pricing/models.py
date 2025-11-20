@@ -2,6 +2,7 @@ from decimal import Decimal
 
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.utils import timezone
 
 
 class PriceRestriction(models.Model):
@@ -12,6 +13,21 @@ class PriceRestriction(models.Model):
 
     def __str__(self) -> str:
         return f'Ограничения для {self.product.name}'
+
+
+class PriceCategoryLimit(models.Model):
+    category_name = models.CharField(max_length=128, unique=True)
+    max_markup_percent = models.DecimalField(max_digits=6, decimal_places=2, default=Decimal('1000'))
+    max_daily_change_percent = models.DecimalField(max_digits=6, decimal_places=2, default=Decimal('90'))
+    markup_cap_percent = models.DecimalField(
+        max_digits=6,
+        decimal_places=2,
+        default=Decimal('1000'),
+        help_text='Максимальная наценка относительно входной цены (например 15 для 15%).',
+    )
+
+    def __str__(self) -> str:
+        return f'Лимиты категории {self.category_name}'
 
 
 class PriceList(models.Model):
@@ -27,6 +43,16 @@ class PriceList(models.Model):
     LABEL_WHITE = 'white'
     LABEL_YELLOW = 'yellow'
     LABEL_PROMO = 'promo'
+    SOURCE_HQ = 'hq'
+    SOURCE_SUPPLIER = 'supplier'
+    SOURCE_ANALYTICS = 'analytics'
+    SOURCE_LOCAL = 'local'
+    SOURCES = [
+        (SOURCE_HQ, 'ГК'),
+        (SOURCE_SUPPLIER, 'Поставщик'),
+        (SOURCE_ANALYTICS, 'Аналитика'),
+        (SOURCE_LOCAL, 'МХ'),
+    ]
 
     trading_point = models.CharField(max_length=128, default='МХ-001')
     product = models.ForeignKey('inventory.Product', on_delete=models.CASCADE, related_name='prices')
@@ -44,6 +70,7 @@ class PriceList(models.Model):
         ],
         default=LABEL_WHITE,
     )
+    source = models.CharField(max_length=16, choices=SOURCES, default=SOURCE_HQ)
     valid_from = models.DateField()
     valid_to = models.DateField(null=True, blank=True)
     is_active = models.BooleanField(default=True)
@@ -114,6 +141,15 @@ class PriceCommand(models.Model):
     status = models.CharField(max_length=16, choices=STATUSES, default=DRAFT)
     created_by = models.ForeignKey('staff.Employee', on_delete=models.SET_NULL, null=True, related_name='price_orders')
     executed_at = models.DateTimeField(null=True, blank=True)
+    executed_by = models.ForeignKey(
+        'staff.Employee',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='executed_price_orders',
+    )
+    trading_point = models.CharField(max_length=128, default='МХ-001')
+    printed_at = models.DateTimeField(null=True, blank=True)
     notes = models.TextField(blank=True)
 
     def __str__(self) -> str:

@@ -5,10 +5,14 @@ from .models import (
     InventorySession,
     Product,
     ProductBatch,
+    ReceivingDiscrepancy,
+    ReceivingItem,
+    ReceivingOrder,
     Shelf,
     StockArea,
     StockItem,
     StockOperation,
+    StockPlacement,
     WriteOffAct,
 )
 
@@ -59,3 +63,27 @@ class InventoryLineInline(admin.TabularInline):
 class InventorySessionAdmin(admin.ModelAdmin):
     list_display = ('code', 'scheduled_date', 'status')
     inlines = [InventoryLineInline]
+
+
+class ReceivingItemInline(admin.TabularInline):
+    model = ReceivingItem
+    extra = 0
+
+
+@admin.register(ReceivingOrder)
+class ReceivingOrderAdmin(admin.ModelAdmin):
+    list_display = ('code', 'supplier', 'expected_arrival', 'status')
+    list_filter = ('status', 'supplier')
+    search_fields = ('code',)
+    inlines = [ReceivingItemInline]
+
+
+@admin.register(ReceivingDiscrepancy)
+class ReceivingDiscrepancyAdmin(admin.ModelAdmin):
+    list_display = ('item', 'discrepancy_type', 'decision', 'reported_to_hq')
+    list_filter = ('discrepancy_type', 'decision', 'reported_to_hq')
+
+
+@admin.register(StockPlacement)
+class StockPlacementAdmin(admin.ModelAdmin):
+    list_display = ('stock_item', 'shelf', 'quantity')

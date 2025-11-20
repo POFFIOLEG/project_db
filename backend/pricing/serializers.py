@@ -1,11 +1,25 @@
 from rest_framework import serializers
 
-from .models import Coupon, PriceCommand, PriceCommandItem, PriceList, PriceRestriction, StopListEntry
+from .models import (
+    Coupon,
+    PriceCategoryLimit,
+    PriceCommand,
+    PriceCommandItem,
+    PriceList,
+    PriceRestriction,
+    StopListEntry,
+)
 
 
 class PriceRestrictionSerializer(serializers.ModelSerializer):
     class Meta:
         model = PriceRestriction
+        fields = '__all__'
+
+
+class PriceCategoryLimitSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PriceCategoryLimit
         fields = '__all__'
 
 

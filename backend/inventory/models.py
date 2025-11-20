@@ -192,3 +192,138 @@ class InventoryLine(TimestampedModel):
     @property
     def difference(self):
         return self.actual_qty - self.system_qty
+
+
+class ReceivingOrder(TimestampedModel):
+    PLANNED = 'planned'
+    IN_PROGRESS = 'in_progress'
+    COMPLETED = 'completed'
+    CANCELLED = 'cancelled'
+    STATUSES = [
+        (PLANNED, 'Запланирована'),
+        (IN_PROGRESS, 'В работе'),
+        (COMPLETED, 'Завершена'),
+        (CANCELLED, 'Отменена'),
+    ]
+
+    code = models.CharField(max_length=32, unique=True)
+    contract = models.ForeignKey('references.Contract', on_delete=models.SET_NULL, null=True, blank=True)
+    supplier = models.ForeignKey('references.Supplier', on_delete=models.SET_NULL, null=True, blank=True)
+    storage_location = models.ForeignKey(
+        'references.StorageLocation', on_delete=models.SET_NULL, null=True, blank=True
+    )
+    expected_arrival = models.DateField()
+    actual_arrival = models.DateTimeField(null=True, blank=True)
+    status = models.CharField(max_length=16, choices=STATUSES, default=PLANNED)
+    created_by = models.ForeignKey(
+        'staff.Employee',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='created_receivings',
+    )
+    received_by = models.ForeignKey(
+        'staff.Employee',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='processed_receivings',
+    )
+    notes = models.TextField(blank=True)
+
+    class Meta:
+        ordering = ['-expected_arrival', '-created_at']
+
+    def __str__(self) -> str:
+        return self.code
+
+
+class ReceivingItem(TimestampedModel):
+    PENDING = 'pending'
+    ACCEPTED = 'accepted'
+    REJECTED = 'rejected'
+    WAITING_HQ = 'waiting_hq'
+    STATUSES = [
+        (PENDING, 'Ожидает проверки'),
+        (ACCEPTED, 'Принят'),
+        (REJECTED, 'Отклонён'),
+        (WAITING_HQ, 'Ожидает решения ГК'),
+    ]
+
+    order = models.ForeignKey(ReceivingOrder, on_delete=models.CASCADE, related_name='items')
+    product = models.ForeignKey(Product, on_delete=models.PROTECT)
+    contract_item = models.ForeignKey('references.ContractItem', on_delete=models.SET_NULL, null=True, blank=True)
+    expected_quantity = models.DecimalField(max_digits=12, decimal_places=3)
+    received_quantity = models.DecimalField(max_digits=12, decimal_places=3, null=True, blank=True)
+    production_date = models.DateField(null=True, blank=True)
+    expiration_date = models.DateField(null=True, blank=True)
+    shelf_life_ok = models.BooleanField(default=True)
+    stock_area = models.ForeignKey(StockArea, on_delete=models.SET_NULL, null=True, blank=True)
+    batch_code_hint = models.CharField(max_length=64, blank=True)
+    input_price = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
+    delivery_price = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
+    comment = models.TextField(blank=True)
+    status = models.CharField(max_length=16, choices=STATUSES, default=PENDING)
+    batch = models.OneToOneField(
+        ProductBatch,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='receiving_link',
+    )
+
+    def __str__(self) -> str:
+        return f'{self.order.code} - {self.product.name}'
+
+
+class ReceivingDiscrepancy(TimestampedModel):
+    TYPE_QUANTITY = 'quantity'
+    TYPE_QUALITY = 'quality'
+    TYPE_EXPIRATION = 'expiration'
+    TYPE_DAMAGE = 'damage'
+    TYPE_OTHER = 'other'
+    TYPES = [
+        (TYPE_QUANTITY, 'Количество'),
+        (TYPE_QUALITY, 'Качество/ассортимент'),
+        (TYPE_EXPIRATION, 'Срок годности'),
+        (TYPE_DAMAGE, 'Повреждение'),
+        (TYPE_OTHER, 'Другое'),
+    ]
+
+    DECISION_PENDING = 'pending'
+    DECISION_ACCEPT = 'accept'
+    DECISION_REJECT = 'reject'
+    DECISION_CHOICES = [
+        (DECISION_PENDING, 'Ожидает решения'),
+        (DECISION_ACCEPT, 'Принять товар'),
+        (DECISION_REJECT, 'Отказать в приёмке'),
+    ]
+
+    item = models.ForeignKey(ReceivingItem, on_delete=models.CASCADE, related_name='discrepancies')
+    discrepancy_type = models.CharField(max_length=32, choices=TYPES, default=TYPE_OTHER)
+    description = models.TextField()
+    reported_to_hq = models.BooleanField(default=False)
+    hq_ticket = models.CharField(max_length=64, blank=True)
+    decision = models.CharField(max_length=16, choices=DECISION_CHOICES, default=DECISION_PENDING)
+    decided_by = models.ForeignKey(
+        'staff.Employee',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='discrepancy_decisions',
+    )
+    decided_at = models.DateTimeField(null=True, blank=True)
+    decision_comment = models.TextField(blank=True)
+
+    def __str__(self) -> str:
+        return f'Несоответствие {self.item_id} ({self.get_discrepancy_type_display()})'
+
+
+class StockPlacement(TimestampedModel):
+    stock_item = models.ForeignKey(StockItem, on_delete=models.CASCADE, related_name='placements')
+    shelf = models.ForeignKey(Shelf, on_delete=models.CASCADE, related_name='placements')
+    quantity = models.DecimalField(max_digits=12, decimal_places=3)
+    note = models.CharField(max_length=255, blank=True)
+
+    class Meta:
+        unique_together = ('stock_item', 'shelf')

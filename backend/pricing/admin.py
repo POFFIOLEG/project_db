@@ -1,6 +1,14 @@
 from django.contrib import admin
 
-from .models import Coupon, PriceCommand, PriceCommandItem, PriceList, PriceRestriction, StopListEntry
+from .models import (
+    Coupon,
+    PriceCategoryLimit,
+    PriceCommand,
+    PriceCommandItem,
+    PriceList,
+    PriceRestriction,
+    StopListEntry,
+)
 
 
 @admin.register(PriceRestriction)
@@ -10,13 +18,18 @@ class PriceRestrictionAdmin(admin.ModelAdmin):
 
 @admin.register(PriceList)
 class PriceListAdmin(admin.ModelAdmin):
-    list_display = ('product', 'price_type', 'final_price', 'valid_from', 'is_active')
-    list_filter = ('price_type', 'is_active')
+    list_display = ('product', 'trading_point', 'price_type', 'final_price', 'valid_from', 'is_active')
+    list_filter = ('price_type', 'is_active', 'trading_point', 'source')
 
 
 @admin.register(Coupon)
 class CouponAdmin(admin.ModelAdmin):
     list_display = ('code', 'product_batch', 'discount_percent', 'expires_at')
+
+
+@admin.register(PriceCategoryLimit)
+class PriceCategoryLimitAdmin(admin.ModelAdmin):
+    list_display = ('category_name', 'max_markup_percent', 'max_daily_change_percent')
 
 
 class PriceCommandItemInline(admin.TabularInline):
