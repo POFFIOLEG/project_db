@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django_filters',
 
     # local apps
+    'core',
     'references',
     'staff',
     'inventory',

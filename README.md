@@ -17,59 +17,103 @@ git push -u origin main
 
 Далее можно работать как обычно (`git status`, `git add`, `git commit`, `git push`).
 
-## Что нужно для запуска
+## Пошаговый запуск проекта
 
-- Python 3.11+ (разработка велась на 3.13).
-- Node.js 18+ для фронтенда.
-- PostgreSQL 15+ с доступом к локальному серверу.
+### 0. Требования к окружению
 
-Переменные подключения уже зашиты в `backend/core/settings.py`:
+- Python 3.11+ (разработка велась на 3.13). На Windows удобнее использовать `py` launcher.
+- Node.js 18+ (вместе с npm) для фронтенда.
+- PostgreSQL 15+ с доступом к локальному суперпользователю (например, `postgres`).
+- Git (при клонировании репозитория), PowerShell или Bash.
 
-| Setting  | Value        |
-|----------|--------------|
-| NAME     | `retail_db`  |
-| USER     | `retail_user`|
-| PASSWORD | `qweqwe`     |
-| HOST     | `127.0.0.1`  |
-| PORT     | `5432`       |
+Дополнительно убедись, что в `PATH` есть:
 
-Создай базу и пользователя заранее (через PgAdmin или `psql`):
+- `python`/`py` и `pip`;
+- `psql` (CLI клиент PostgreSQL);
+- `npm`.
+
+### 1. Клонируй репозиторий
+
+```bash
+git clone <repo-url>
+cd project_db-main1
+```
+
+### 2. Подготовь PostgreSQL и выдай права
+
+1. Подключись к PostgreSQL под суперпользователем (`psql -U postgres` или PgAdmin).
+2. Создай БД и роль, выдай все права на БД и схему `public`:
 
 ```sql
 CREATE DATABASE retail_db;
 CREATE USER retail_user WITH PASSWORD 'qweqwe';
 GRANT ALL PRIVILEGES ON DATABASE retail_db TO retail_user;
+GRANT ALL ON SCHEMA public TO retail_user;
+ALTER DATABASE retail_db OWNER TO retail_user; -- опционально, но упрощает поддержку
 ```
 
-## Быстрый старт backend + автозаполнение БД
+> Если БД уже существовала, удостоверься, что роль `retail_user` может создавать таблицы (`GRANT CREATE ON SCHEMA public`). Настройки подключения заданы в `backend/core/settings.py`.
 
-```bash
+### 3. Настрой backend
+
+```powershell
 cd backend
-python -m venv .venv
-.venv\Scripts\activate        # или source .venv/bin/activate в Linux/Mac
+py -m venv .venv            # python -m venv .venv если нет launcher'а
+.\.venv\Scripts\activate    # или source .venv/bin/activate на Linux/macOS
+python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
-python manage.py bootstrap_data
-python manage.py runserver
 ```
 
-Команда `bootstrap_data`:
+Пакет `psycopg2-binary` уже включён, поэтому дополнительных билд-инструментов ставить не нужно.
 
-- применяет все миграции;
-- проверяет, есть ли данные (`references_country`);
-- если БД пуста — автоматически загружает `seed.json`;
-- если данные уже есть, команда завершится предупреждением (можно принудительно загрузить повторно через `python manage.py bootstrap_data --force`).
+### 4. Прогони миграции и заполни БД
 
-Пароли пользователей из фикстуры: `Password123`.
+```powershell
+python manage.py bootstrap_data          # применит миграции и загрузит seed, если БД пустая
+# либо принудительная перезаливка:
+python manage.py bootstrap_data --force
+```
 
-## Фронтенд
+Что делает команда:
 
-```bash
-cd frontend
+- запускает `migrate`;
+- проверяет наличие записей в `references_country`;
+- если данных нет — подхватывает `seed.json` (по умолчанию лежит в корне репозитория);
+- при наличии данных выводит предупреждение и завершает работу (поэтому `--force` полезен для сброса).
+
+В seed уже заведён суперпользователь `director` с паролем `Password123`.
+
+### 5. Запусти backend-сервер
+
+```powershell
+python manage.py runserver 0.0.0.0:8000
+```
+
+- API доступно по `http://127.0.0.1:8000`.
+- Админка — `http://127.0.0.1:8000/admin/` (логин `director`, пароль `Password123`).
+- Для остановки нажми `Ctrl+C` в терминале.
+
+### 6. Настрой и запусти frontend
+
+```powershell
+cd ../frontend
 npm install
-npm run dev
+npm run dev -- --host 0.0.0.0 --port 5173   # можно опустить параметры, если достаточно localhost
 ```
 
-По умолчанию Vite поднимет dev-сервер на `http://localhost:5173`, API слушает `http://127.0.0.1:8000`.
+Vite поднимет SPA на `http://localhost:5173` (в логе также будет ссылка вида `http://<LAN-IP>:5173/` для доступа с других устройств сети).
+
+### 7. Проверь связку
+
+1. Убедись, что backend слушает порт `8000`, а frontend — `5173`.
+2. Открой SPA (`http://localhost:5173`), проверь, что данные подтягиваются из API.
+3. Зайди в Django Admin, чтобы подтвердить, что фикстура загрузилась.
+
+### 8. Рекомендуемые доп. утилиты
+
+- **Task Scheduler / cron** — для автоматизации команд `close_work_sessions` и `generate_attendance_report` (подробности ниже).
+- **pgAdmin** — для визуальной работы с БД.
+- **Postman / HTTPie** — для тестирования API.
 
 ## Проверка после клонирования
 
